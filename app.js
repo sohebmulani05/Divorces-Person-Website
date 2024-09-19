@@ -8,6 +8,7 @@ const ejsMate = require("ejs-mate")
 const wrapAsync = require("./utils/wrapAsync.js")
 const ExpressError = require("./utils/ExpressError.js")
 const {listingSchema} = require("./schema.js")
+const Review = require("./models/review.js")
 
 app.set("views engine", "ejs")
 app.set("views", path.join(__dirname, "/views"))
@@ -41,7 +42,8 @@ const validateListing = (req,res,next) =>{
 //Index Route
 app.get("/listings", wrapAsync(async (req,res)=>{
     const allListings = await Listing.find({})
-   res.render("listings/index.ejs", {allListings})
+    let allReview = await Review.find({})
+   res.render("listings/index.ejs", {allListings, allReview})
 }))
 
 
@@ -109,7 +111,26 @@ app.delete("/listings/:id", wrapAsync(async (req,res)=>{
     res.redirect("/listings")
 }))
 
+//Reviews
+//Post Route
+app.post("/listings/reviews", async(req,res)=>{
+    let newReview = new Review(req.body.review)
+    let result = await newReview.save()
+    console.log(result)
+    res.redirect("/listings")
+})
 
+app.delete("/listings/reviews/:reviewId", async(req,res)=>{
+    let{reviewId} = req.params;
+    let result = await Review.findByIdAndDelete(reviewId)
+    res.redirect("/listings")
+})
+
+// //index route
+// app.get("/listings", async(req,res)=>{
+//     let allReview = await Review.find({})
+//     res.render("listings/index.ejs", {allReview})
+// })
 
 
 

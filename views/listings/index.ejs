@@ -1,16 +1,13 @@
 <% layout("/layouts/boilerplate") %>
 <body>
     <h3>All Profiles</h3>
-    <!-- <form method="get" action="/listings/new">
-        <button>Create New Listing</button>
-    </form> -->
 
     <div class="row row-cols-lg-6 row-cols-md-2 row-cols-sm-1">
 
         <% for(let listing of allListings){ %>
             <a href="/listings/<%= listing._id %>" class="listing-link">
 
-            <div class="card col cards">
+            <div class="card col cards listing-card" >
                 <img src="<%= listing.image %>" class="card-img-top" alt="listing_image" style="height: 20rem;">
 
                 <div class="card-body">
@@ -23,11 +20,58 @@
 
 
             </a>
-        <% } %>   
+        <% } %>  
+        
+    </div>
 
+    <!-- Review Section -->
+    <hr>
+    <div class="col-8 offset-3 mb-3">
+        <h4>Leave a Review</h4>
+        <form method="post" action="/listings/reviews">
+            <div class="mb-3 mt-3">
+                <label for="rating" class="form-label">Rating</label>
+                <input name="review[rating]" type="range" min="1" max="5" class="form-range">
+            </div>
+
+            <div class="mb-3 mt-3">
+                <label for="comment" class="form-label">Comments</label>
+                <textarea name="review[comment]" id="comment" cols="30" rows="5" class="form-control"></textarea>
+            </div>
+            <button class="btn btn-outline-dark">Submit</button>
+        </form>
+
+        <hr>
+
+        <h4>All Reviews</h4>
+        <div class="row">
+                <% for(let review of allReview){ %>
+                    <div class="card col-5 mb-3 ms-3" >
+                        <div class="card-body">
+                            <h5 class="card-title">UserName</h5>
+                            <p class="card-text"><%= review.comment %></p>
+                            <p class="card-text"><b><%= review.rating %></b> <i class="fa-solid fa-star star"></i> </p>
+                        </div>
+
+                        <form class="mb-3 mt-2" method="post" action="/listings/reviews/<%= review._id %>?_method=DELETE">
+                            <button class="btn btn-sm btn-dark">Delete</button>
+                        </form>
+
+                    </div>
+
+                <% } %>
+        </div>
     </div> 
+
+
+    
+  
+
     
 </body>
+
+
+
 
 
 <!-- toLocaleString("en-IN") -->
